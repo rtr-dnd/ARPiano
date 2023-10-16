@@ -13,6 +13,17 @@ public class PianoManager : MonoBehaviour
     const string leftKey = "PianoLeft";
     const string frontKey = "PianoFront";
 
+    bool _isCalibShowing = false;
+    public bool isCalibShowing
+    {
+        get { return _isCalibShowing; }
+        set
+        {
+            _isCalibShowing = value;
+            fingerTip.GetComponent<MeshRenderer>().enabled = value;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,19 +34,34 @@ public class PianoManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L) || OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
         {
             _ = CreateAndSave(leftAnchor, leftKey);
         }
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) || OVRInput.GetDown(OVRInput.Button.PrimaryShoulder))
         {
             _ = CreateAndSave(frontAnchor, frontKey);
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S) || OVRInput.GetDown(OVRInput.RawTouch.A))
         {
-            fingerTip.GetComponent<MeshRenderer>().enabled = !fingerTip.GetComponent<MeshRenderer>().enabled;
+            isCalibShowing = !isCalibShowing;
         }
     }
+
+    public void OnCalibButtonPressed()
+    {
+        isCalibShowing = !isCalibShowing;
+    }
+    public void OnLeftButtonPressed()
+    {
+        _ = CreateAndSave(leftAnchor, leftKey);
+    }
+    public void OnFrontButtonPressed()
+    {
+        _ = CreateAndSave(frontAnchor, frontKey);
+    }
+
+
 
     void OrientPiano()
     {
